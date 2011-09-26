@@ -4,7 +4,7 @@ Steps to run Forge (complete instructions - just 5 steps):
 2. Run `bin/forge` (unix) or `bin/forge.bat` (windows)
 3. Create a new Project with JPA
 
-    new-project --named example --topLevelPackage com.example
+     new-project --named example --topLevelPackage com.example
 
 4. 
     beans setup
