@@ -35,7 +35,7 @@ Deploy to OpenShift Express
 ===========================
 
 1. From the command line `rhc-create-app -a acme -t jbossas-7.0 -n` and copy the git URL
-1. In forge, run git init
+1. In forge *project root*, run git init
 2. In forge run git remote add openshift "<gitURL>"
 3. Add this profile to the pom:
 
@@ -59,4 +59,7 @@ Deploy to OpenShift Express
             </plugins>
          </build>
       </profile>
-    </profiles>
+   </profiles>
+
+4. Add the files to deploy to openshift and commit `git add src pom.xml` and `git commit -m"deploy"`
+5. Push the files to openshift `git push openshift HEAD`
