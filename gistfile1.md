@@ -63,6 +63,22 @@ Deploy to OpenShift Express
 
 4. Add the files to deploy to openshift and commit `git add src pom.xml` and `git commit -m"deploy"`
 5. Push the files to openshift `git push openshift HEAD`
+6. Paste url from openshift setup into web browser
+
+Deploy to Flex
+==============
+
+1. Open Flex console https://openshift.redhat.com/flex/flex/index.html
+2. Clusters -> Add Cluster, Create ACME cluster - this takes a while
+3. Servers -> Add Server
+4. Applications -> Add Application
+5. Go into application and click on Components, choose JBoss as application type, AS 7.0 as the version
+6. Hit save
+7. Files -> Upload -> `workspace-demos/acme/target/acme.war`
+8. Save 
+9. Deploy Changes -> Start and click Deploy - this takes a while
+10. Copy cluster URL and add `acme`
+11. Copy server ip and add `acme`
 
 TODO
 ====
@@ -70,4 +86,3 @@ TODO
 * Add in JAX-RS scaffold
 * Get metawidget working with validator
 * get the console output back from git push properly
-* Deploy to flex
