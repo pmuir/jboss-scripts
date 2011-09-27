@@ -6,7 +6,8 @@ Steps to run Forge (complete instructions - just 5 steps):
 4. Import into Eclipse
 4. Add CDI `beans setup`
 5. Add JPA `persistence setup --provider HIBERNATE --container JBOSS_AS7` and don't add custom apis
-5. Add Bean Validation ` validation setup --provider HIBERNATE_VALIDATOR`
+5. Add Bean Validation `validation setup --provider HIBERNATE_VALIDATOR`
+5. Add JSF `faces setup`
 6. Add the Member entity `entity --named Member --package com.acme.model`
 7. Add the name field `field string --named name`
 8. Add constraints `add-constraint NotNull --onProperty name` and `add-constraint Size --onProperty name --min 1 --max 25`
