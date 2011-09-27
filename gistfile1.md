@@ -21,5 +21,5 @@ Steps to run Forge (complete instructions - just 5 steps):
 12. Add scaffolding `scaffold setup`
 13. Scaffold from entity `scaffold from-entity com.acme.model.Member.java`
 14. Built it `build`
-15. Start JBoss AS 7
+15. Start JBoss AS 7.0.1 (7.0.2 is broken for JSF resources + JNDI binding)
 16. Deploy it `as7 deploy`
