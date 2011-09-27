@@ -63,3 +63,11 @@ Deploy to OpenShift Express
 
 4. Add the files to deploy to openshift and commit `git add src pom.xml` and `git commit -m"deploy"`
 5. Push the files to openshift `git push openshift HEAD`
+
+TODO
+====
+
+* Add in JAX-RS scaffold
+* Get metawidget working with validator
+* get the console output back from git push properly
+* Deploy to flex
