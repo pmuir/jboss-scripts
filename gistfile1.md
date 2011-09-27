@@ -10,9 +10,9 @@ Steps to run Forge (complete instructions - just 5 steps):
 5. Add JSF `faces setup`
 6. Add the Member entity `entity --named Member --package com.acme.model`
 7. Add the name field `field string --named name`
-8. Add constraints `add-constraint NotNull --onProperty name` and `add-constraint Size --onProperty name --min 1 --max 25`
+8. Add constraints `constraint NotNull --onProperty name` and `constraint Size --onProperty name --min 1 --max 25`
 9. Add the email field `field string --named email`
-10. Add constraints `add-constraint NotNull --onProperty email`
+10. Add constraints `constraint NotNull --onProperty email`
 11. Add the phoneNumber field `field string --named phoneNumber`
 11. Add JSF `project install-facet forge.spec.jsf`
 12. Add scaffolding `scaffold setup`
