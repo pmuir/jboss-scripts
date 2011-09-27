@@ -1,4 +1,11 @@
-Steps to run Forge (complete instructions - just 5 steps):
+Assumptions
+===========
+
+* Forge setup
+* OpenShift Express tools installed, account created, domain set up
+
+Steps to run Forge to create a "kitchensink" app
+================================================
 
 1. Download and Unzip the distribution into a folder (like where you put maven.)
 2. Run `bin/forge` (unix) or `bin/forge.bat` (windows)
@@ -23,3 +30,33 @@ Steps to run Forge (complete instructions - just 5 steps):
 14. Built it `build`
 15. Start JBoss AS 7.0.1 (7.0.2 is broken for JSF resources + JNDI binding)
 16. Deploy it `as7 deploy`
+
+Deploy to OpenShift Express
+===========================
+
+1. From the command line `rhc-create-app -a acme -t jbossas-7.0 -n` and copy the git URL
+1. In forge, run git init
+2. In forge run git remote add openshift "<gitURL>"
+3. Add this profile to the pom:
+
+    <profiles>
+      <profile>
+         <!-- When built in OpenShift the 'openshift' profile will be used when invoking mvn. -->
+         <!-- Use this profile for any OpenShift specific customization your app will need. -->
+         <!-- By default that is to put the resulting archive into the 'deployments' folder. -->
+         <!-- http://maven.apache.org/guides/mini/guide-building-for-different-environments.html -->
+         <id>openshift</id>
+         <build>
+            <plugins>
+               <plugin>
+                  <artifactId>maven-war-plugin</artifactId>
+                  <version>2.1.1</version>
+                  <configuration>
+                     <outputDirectory>deployments</outputDirectory>
+                     <warName>ROOT</warName>
+                  </configuration>
+               </plugin>
+            </plugins>
+         </build>
+      </profile>
+    </profiles>
