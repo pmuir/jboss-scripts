@@ -12,9 +12,12 @@ Steps to run Forge (complete instructions - just 5 steps):
 7. Add the name field `field string --named name`
 8. Add constraints `constraint NotNull --onProperty name` and `constraint Size --onProperty name --min 1 --max 25` and `constraint Pattern --onProperty name --regexp "[A-Za-z ]*" --message "must contain only letters and spaces"`
 9. Add the email field `field string --named email`
-10. Add constraints `constraint NotNull --onProperty email`
+10. Add constraints `constraint NotNull --onProperty email` 
+10. `cd ..` (needed as no fs events yet)
+10. Add `@Email` and `@NotEmpty` directly onto field (constraint doesn't support hibernate validator constraints yet)
+10. `cd Member.java`
 11. Add the phoneNumber field `field string --named phoneNumber`
-11. Add JSF `project install-facet forge.spec.jsf`
+12. Add constraints `constraint NotNull --onProperty phoneNumber` and `constraint Size --onProperty phoneNumber --min 10 --max 12` and `constraint Digits --onProperty phoneNumber --fraction 0 --integer 12`
 12. Add scaffolding `scaffold setup`
 13. Scaffold from entity `scaffold from-entity com.acme.model.Member.java`
 14. Built it `build`
