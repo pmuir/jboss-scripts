@@ -33,35 +33,9 @@ Steps to run Forge to create a "kitchensink" app
 Deploy to OpenShift Express
 ===========================
 
-1. From the command line `rhc-create-app -a acme -t jbossas-7.0 -n` and copy the git URL
-1. In forge *project root*, run git init
-2. In forge run git remote add openshift "<gitURL>"
-3. Add this profile to the pom:
-
-    <profiles>
-      <profile>
-         <!-- When built in OpenShift the 'openshift' profile will be used when invoking mvn. -->
-         <!-- Use this profile for any OpenShift specific customization your app will need. -->
-         <!-- By default that is to put the resulting archive into the 'deployments' folder. -->
-         <!-- http://maven.apache.org/guides/mini/guide-building-for-different-environments.html -->
-         <id>openshift</id>
-         <build>
-            <plugins>
-               <plugin>
-                  <artifactId>maven-war-plugin</artifactId>
-                  <version>2.1.1</version>
-                  <configuration>
-                     <outputDirectory>deployments</outputDirectory>
-                     <warName>ROOT</warName>
-                  </configuration>
-               </plugin>
-            </plugins>
-         </build>
-      </profile>
-   </profiles>
-
-4. Add the files to deploy to openshift and commit `git add src pom.xml` and `git commit -m"deploy"`
-5. Push the files to openshift `git push openshift HEAD`
+1. `rhc-express setup`
+4. Add the files to deploy to openshift `git add src pom.xml`
+5. Push the files to openshift `rhc-express deploy`
 6. Paste url from openshift setup into web browser
 
 Deploy to Flex
@@ -78,10 +52,3 @@ Deploy to Flex
 9. Deploy Changes -> Start and click Deploy - this takes a while
 10. Copy cluster URL and add `acme`
 11. Copy server ip and add `acme`
-
-TODO
-====
-
-* Add in JAX-RS scaffold
-* Get metawidget working with validator
-* get the console output back from git push properly
