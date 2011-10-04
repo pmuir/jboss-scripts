@@ -41,14 +41,7 @@ Deploy to OpenShift Express
 Deploy to Flex
 ==============
 
-1. Open Flex console https://openshift.redhat.com/flex/flex/index.html
-2. Clusters -> Add Cluster, Create ACME cluster - this takes a while
-3. Servers -> Add Server
-4. Applications -> Add Application
-5. Go into application and click on Components, choose JBoss as application type, AS 7.0 as the version
-6. Hit save
-7. Files -> Upload -> `workspace-demos/acme/target/acme.war`
-8. Save 
-9. Deploy Changes -> Start and click Deploy - this takes a while
-10. Copy cluster URL and add `acme`
-11. Copy server ip and add `acme`
+1. `rhc-flex setup`
+2. `rhc-flex deploy`
+3. `rhc-flex start-application`
+4. Go to the flex console <https://openshift.redhat.com/flex/flex/index.html> and click on "Clusters", find the cluster DNS, and go to <ClusterDNS>/acme
