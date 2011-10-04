@@ -1,13 +1,13 @@
 Assumptions
 ===========
 
-* Forge setup
-* OpenShift Express tools installed, account created, domain set up
+* Forge 1.0.0.Beta3 setup (<http://jboss.org/forge>)
+* OpenShift Express tools installed, account created, domain set up (<http://openshift.com>)
 
-Steps to run Forge to create a "kitchensink" app
+Steps to run Forge to create a simple app
 ================================================
 
-1. Download and Unzip the distribution into a folder (like where you put maven.)
+1. Download and Unzip the Forge distribution into a folder (like where you put maven.)
 2. Run `bin/forge` (unix) or `bin/forge.bat` (windows)
 3. Create a new Project with JPA `new-project --named acme --topLevelPackage`
 4. Import into Eclipse
