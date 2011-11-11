@@ -19,23 +19,23 @@ Steps to run Forge to create a simple app
 7. Add these fields with constrains via Eclipse
 
         @Id GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", updatable = false, nullable = false)
-     private Long id = null;
-     
-     @Version @Column(name = "version")
-     private int version = 0;
-     
-    @Column
-    @Size(min = 1, max = 25) @NotNull
-    private String name;
-    
-    @Column
-    @NotNull
-    private String email;
-    
-    @Column
-    @Digits(integer = 12, fraction = 0) @NotNull @Size(min = 10, max = 12)
-    private String phoneNumber;
+        @Column(name = "id", updatable = false, nullable = false)
+        private Long id = null;
+         
+        @Version @Column(name = "version")
+        private int version = 0;
+        
+        @Column
+        @Size(min = 1, max = 25) @NotNull
+        private String name;
+        
+        @Column
+        @NotNull
+        private String email;
+        
+        @Column
+        @Digits(integer = 12, fraction = 0) @NotNull @Size(min = 10, max = 12)
+        private String phoneNumber;
 
 12. Add scaffolding `scaffold setup`
 13. Scaffold from entity `scaffold from-entity com.acme.model.Member.java`
