@@ -60,3 +60,41 @@ Deploy to Flex
 2. `rhc-flex deploy`
 3. `rhc-flex start-application`
 4. Go to the flex console <https://openshift.redhat.com/flex/flex/index.html> and click on "Clusters", find the cluster DNS, and go to <ClusterDNS>/acme
+
+Add clustering
+==============
+
+1. Add to `Member.java`
+
+       	@Override
+        public String toString() {
+           return id + " (" + name + ")";
+        }
+
+2. Add `CurrentMemberManager` class in `view`. Add `@SesionScoped` and `@Named` to it. Add a field `Member member`, generate getters and setters. Make sure the class implements `Serializable`. You should end up with:
+
+       @SessionScoped
+       @Named
+       public class CurrentMemberManager implements Serializable {
+       
+          private static final long serialVersionUID = -6628473014607303656L;
+        
+          private Member member;
+       
+          public Member getMember() {
+             return member;
+          }
+          
+          public void setMember(Member member) {
+             this.member = member;
+          }
+       }
+
+3. Replace `Your application is running` in `index.xhtml` with:
+
+        <p>
+           Your application is running.
+        </p>
+        <p>
+           Current Member: #{currentMemberManager.member}
+        </p>
