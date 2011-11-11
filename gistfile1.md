@@ -18,9 +18,8 @@ Steps to run Forge to create a simple app
 6. Add the Member entity `entity --named Member --package com.acme.model`
 7. Add these fields with constrains via Eclipse
 
-    
-    @Id GeneratedValue(strategy = GenerationType.AUTO)
-     @Column(name = "id", updatable = false, nullable = false)
+        @Id GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", updatable = false, nullable = false)
      private Long id = null;
      
      @Version @Column(name = "version")
