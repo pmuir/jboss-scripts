@@ -73,22 +73,22 @@ Add clustering
 
 2. Add `CurrentMemberManager` class in `view`. Add `@SesionScoped` and `@Named` to it. Add a field `Member member`, generate getters and setters. Make sure the class implements `Serializable`. You should end up with:
 
-       @SessionScoped
-       @Named
-       public class CurrentMemberManager implements Serializable {
+        @SessionScoped
+        @Named
+        public class CurrentMemberManager implements Serializable {
        
-          private static final long serialVersionUID = -6628473014607303656L;
+           private static final long serialVersionUID = -6628473014607303656L;
         
-          private Member member;
+           private Member member;
        
-          public Member getMember() {
-             return member;
-          }
+           public Member getMember() {
+              return member;
+           }
           
-          public void setMember(Member member) {
-             this.member = member;
-          }
-       }
+           public void setMember(Member member) {
+              this.member = member;
+           }
+        }
 
 3. Replace `Your application is running` in `index.xhtml` with:
 
