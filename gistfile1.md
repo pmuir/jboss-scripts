@@ -16,12 +16,28 @@ Steps to run Forge to create a simple app
 5. Add Bean Validation `validation setup --provider HIBERNATE_VALIDATOR`
 5. Add JSF `faces setup`
 6. Add the Member entity `entity --named Member --package com.acme.model`
-7. Add the name field `field string --named name`
-8. Add constraints `constraint NotNull --onProperty name` and `constraint Size --onProperty name --min 1 --max 25` and `constraint Pattern --onProperty name --regexp "[A-Za-z ]*" --message "must contain only letters and spaces"`
-9. Add the email field `field string --named email`
-10. Add constraints `constraint NotNull --onProperty email` 
-11. Add the phoneNumber field `field string --named phoneNumber`
-12. Add constraints `constraint NotNull --onProperty phoneNumber` and `constraint Size --onProperty phoneNumber --min 10 --max 12` and `constraint Digits --onProperty phoneNumber --fraction 0 --integer 12`
+7. Add these fields with constrains via Eclipse
+
+        @Id GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id", updatable = false, nullable = false)
+	private Long id = null;
+
+	@Version @Column(name = "version")
+	private int version = 0;
+
+	@Column
+	@Size(min = 1, max = 25) @NotNull
+	private String name;
+
+	@Column
+	@NotNull
+	private String email;
+
+
+	@Column
+	@Digits(integer = 12, fraction = 0) @NotNull @Size(min = 10, max = 12)
+	private String phoneNumber;
+
 12. Add scaffolding `scaffold setup`
 13. Scaffold from entity `scaffold from-entity com.acme.model.Member.java`
 13. `rest setup`
