@@ -60,3 +60,35 @@ Deploy to Flex
 2. `rhc-flex deploy`
 3. `rhc-flex start-application`
 4. Go to the flex console <https://openshift.redhat.com/flex/flex/index.html> and click on "Clusters", find the cluster DNS, and go to <ClusterDNS>/acme
+
+Add MySQL (Amazon RDS) to Express deployment
+============================================
+
+1. Have RDS set up and created with a user `acme`, password `abcdef`  and database `acme`
+2. Get the RDS hostname/ip
+3. Start MySQL consone locally `mysql5 -h <rds hostname/ip> -u <username> -p` and `use acme`. We will use this to check that data is added to the database
+4. In forge, `edit .openshift/config/standalone.xml`
+5. Locate the `MySQLDS`
+6. Change the `connection-url` to `jdbc:mysql://<rds hostname/ip>:3366/acne`
+7. Change the `username` to `acme` and the password to `abcdef` and save the file
+8. In forge, `edit src/main/resources/persistence.xml` and set the DS to `java:jboss/datasources/MySQLDS` and change the `hbm2ddl` property to `create`
+9. In forge `rhc-express deploy`
+10. Visit the app, and add an entry
+11. `select * from Member;`
+12. Now, set `hbm2ddl` in `src/main/resources/persistence.xml` to `none`
+
+Use Jenkins with Express to manage builds
+=========================================
+
+(Note I haven't got this bit to work reliably yet so test it a few times)
+
+Here we use an easily installed Jenkins to do builds. It takes up one slot of our 5 on OpenShift. This means your build runs in a jail, and doesn't steal resources from a running app. The app will stay up, and only get replaced if the build succeeds. It also gives you a record of builds. Returns control of console immediately. Good for >1 person working on app.
+
+1. Create the Jenkins CDI monitor `rhc-create-app -a jeninks -t jenkins-1.4 -n` and go to `jenkins-<openshift-domain>.rhcloud.com`
+2. Run `rhc-ctl-app -a acme -e add-jenkins-client-1.4` to add the jenkins client to our app (pushes build to jenkins)
+3. Make a change to the app e.g. `index.xhtml`
+4. `rhc-express deploy`
+5. Open up the jenkins page and show the node coming, show existing app still up
+6. Wait a while (node starting, deps downloading)
+7. Show the build succeeding
+8. Introduce a build error and show this failing to deploy
