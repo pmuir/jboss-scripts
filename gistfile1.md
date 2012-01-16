@@ -91,4 +91,10 @@ Here we use an easily installed Jenkins to do builds. It takes up one slot of ou
 5. Open up the jenkins page and show the node coming, show existing app still up
 6. Wait a while (node starting, deps downloading)
 7. Show the build succeeding
-8. Introduce a build error and show this failing to deploy
+8. Introduce a build error and show this failing to deploy - create `AcmeTest.java` class in `src/main/test`
+9. Add junit to the POM as a dependency
+10. Add an test that does `Assert.fail()`
+11. In forge `git add src/test` and then `rhc-express deploy`
+12. Go to Jenkins and login (password given when you created the instance)
+13. Edit the build and remove `-DskipTests`
+14. Show the build failing.
