@@ -1,99 +1,266 @@
 Show Forge to create a Java EE app on OpenShift
 ===============================================
 
-Assumptions
------------
+Prerequisites
+-------------
 
-* Forge 1.0.0.Beta3 setup http://jboss.org/forge
-* OpenShift Express tools installed, account created, domain set up http://openshift.com
+* Forge 1.0.2.Final installed. See link:http://jboss.org/forge for more.
+* OpenShift set up - account created, domain set up, ssh keys registered. See link:http://openshift.com for more.
+* JBDS or Eclipse + JBoss Tools setup
+* `openshift-express` plugin installed in Forge
 
+ 
+To complete the testing section
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Steps to run Forge to create a simple app
------------------------------------------
+* An application named `test` created with the MySQL embedded cartridge added
+* Your SSH passphrase available as the environment variable `SSH_PASSPHRASE`
+* `arquillian` plugin installed in Forge
 
-1. Download and Unzip the Forge distribution into a folder (like where you put maven.)
-2. Run `bin/forge` (unix) or `bin/forge.bat` (windows)
-3. Create a new Project with JPA `new-project --named acme --topLevelPackage`
-4. Import into Eclipse
-5. Add CDI `beans setup`
-6. Add JPA `persistence setup --provider HIBERNATE --container JBOSS_AS7` and don't add custom apis
-7. Add Bean Validation `validation setup --provider HIBERNATE_VALIDATOR`
-8. Add JSF `faces setup`
-9. Add the Member entity `entity --named Member --package com.acme.model`
+Create an app
+-------------
+
+This section of the script creates a new app from scratch from Forge, imports it into JBDS, and adds the key Java EE 6 technologies. It creates an entity, and scaffolds both a JSF CRUD view and a JAX-RS endpoint.
+
+1. Download and Unzip the Forge distribution into a folder of your choice
+2. Run 
+
+    bin/forge (unix) 
+    bin/forge.bat (windows)
+
+3. Create a new Project
+
+    new-project --named acme --topLevelPackage com.acme
+
+4. Import into Eclipse using m2e
+5. Now, we'll add what we want to the projec using Forge. First, add CDI
+    
+    beans setup
+
+6. Add JPA, and when promted select `n` to no as we don't want the extended APIs
+    
+    persistence setup --provider HIBERNATE --container JBOSS_AS7
+
+7. Add Bean Validation 
+
+    validation setup --provider HIBERNATE_VALIDATOR
+
+8. Add JSF 
+
+    faces setup
+
+9. Now, let's add an entity using Forge. This adds the class, the `@Entity` annotation, an id field, and a version field.
+
+    entity --named Member --package com.acme.model
+
 10. Add these fields with constrains via Eclipse
 
-        @Id GeneratedValue(strategy = GenerationType.AUTO)
-        @Column(name = "id", updatable = false, nullable = false)
-        private Long id = null;
-         
-        @Version @Column(name = "version")
-        private int version = 0;
+[source,java]
+---------------------------------------------------------------------------               
+    @Column
+    @Size(min = 1, max = 25) @NotNull
+    private String name;
         
-        @Column
-        @Size(min = 1, max = 25) @NotNull
-        private String name;
+    @Column
+    @NotNull
+    private String email;
         
-        @Column
-        @NotNull
-        private String email;
-        
-        @Column
-        @Digits(integer = 12, fraction = 0) @NotNull @Size(min = 10, max = 12)
-        private String phoneNumber;
+    @Column
+    @Digits(integer = 12, fraction = 0) @NotNull @Size(min = 10, max = 12)
+    private String phoneNumber;
+--------------------------------------------------------------------------
 
-11. Add scaffolding `scaffold setup`
-12. Scaffold from entity `scaffold from-entity com.acme.model.Member.java`
-13. `rest setup`
-14. `rest endpoint-from-entity com.acme.model.Member.java`
-15. Built it `build`
-16. Start JBoss AS 7.0.1 (7.0.2 is broken for JSF resources + JNDI binding)
-17. Deploy it `as7 deploy`
+11. Now, generate getters and setters for all fields using Eclipse
 
+12. Now' let's scaffold a JSF CRUD view for the entity. First, add scaffolding to the project in Forge.
 
-Deploy to OpenShift Express
----------------------------
+    scaffold setup
 
-1. `rhc-express setup`
-2. Add the files to deploy to openshift `git add src pom.xml`
-3. Push the files to openshift `rhc-express deploy`
-4. Paste url from openshift setup into web browser
+13. Now, scaffold the view for the entity
 
+    scaffold from-entity com.acme.model.Member.java
 
-Add MySQL (Amazon RDS) to Express deployment
---------------------------------------------
+14. We also want to scaffold JAX-RS endpoints, so setup JAX-RS
 
-1. Have RDS set up and created with a user `acme`, password `abcdef`  and database `acme`
-2. Get the RDS hostname/ip
-3. Start MySQL consone locally `mysql5 -h <rds hostname/ip> -u <username> -p` and `use acme`. We will use this to check that data is added to the database
-4. In forge, `edit .openshift/config/standalone.xml`
-5. Locate the `MySQLDS`
-6. Change the `connection-url` to `jdbc:mysql://<rds hostname/ip>:3366/acne`
-7. Change the `username` to `acme` and the password to `abcdef` and save the file
-8. In forge, `edit src/main/resources/persistence.xml` and set the DS to `java:jboss/datasources/MySQLDS` and change the `hbm2ddl` property to `create`
-9. In forge `rhc-express deploy`
-10. Visit the app, and add an entry
-11. `select * from Member;`
-12. Now, set `hbm2ddl` in `src/main/resources/persistence.xml` to `none`
+    rest setup
+
+15. And scaffold an endpoint from it
+
+    rest endpoint-from-entity com.acme.model.Member.java
+
+16. Start the JBoss server 
+
+    $JBOSS_HOME/bin/standalone.sh (unix)
+    $JBOSS_HOME/bin/standalone.bat
+    
+17. Build and deploy it 
+
+    mvn clean package jboss-as:deploy
 
 
-Use Jenkins with Express to manage builds
------------------------------------------
+Deploy to OpenShift 
+-------------------
 
-(Note I haven't got this bit to work reliably yet so test it a few times)
+This section takes the app you created and pushes it to the cloud. Now the app is publically available!
 
-Here we use an easily installed Jenkins to do builds. It takes up one slot of our 5 on OpenShift. This means your build runs in a jail, and doesn't steal resources from a running app. The app will stay up, and only get replaced if the build succeeds. It also gives you a record of builds. Returns control of console immediately. Good for >1 person working on app.
+1. First, we need to set up an OpenShift app. Forge makes this easy, just run, and accept the default values at the prompt. Make sure to enter your OpenShift username if this is the first time using OpenShift on this computer.
 
-1. Create the Jenkins CDI monitor `rhc-create-app -a jeninks -t jenkins-1.4 -n` and go to `jenkins-<openshift-domain>.rhcloud.com`
-2. Run `rhc-ctl-app -a acme -e add-jenkins-client-1.4` to add the jenkins client to our app (pushes build to jenkins)
-3. Make a change to the app e.g. `index.xhtml`
-4. `rhc-express deploy`
-5. Open up the jenkins page and show the node coming, show existing app still up
-6. Wait a while (node starting, deps downloading)
-7. Show the build succeeding
-8. Introduce a build error and show this failing to deploy - create `AcmeTest.java` class in `src/main/test`
-9. Add junit to the POM as a dependency
-10. Add an test that does `Assert.fail()`
-11. In forge `git add src/test` and then `rhc-express deploy`
-12. Go to Jenkins and login (password given when you created the instance)
-13. Edit the build and remove `-DskipTests`
-14. Show the build failing.
+    rhc-express setup
+
+2. Add the files to deploy to openshift and push them
+
+    git add src pom.xml; rhc-express deploy
+
+4. Paste url provided by `rhc-express setup` into web browser
+
+
+Add MySQL to app
+----------------
+
+This section switches the in memory H2 datasource for a MySQL database. Once complete, you won't loose data between restarts of the app. We use OpenShift's built in MySQL support, configured via the web console.
+
+1. First, add the MySQL _embedded cartridge_ to our app. On the OpenShift console (accessed from link:https://openshift.redhat.com/app/console/applications), click on your application, and choose _Details -> Add+ -> MySQL Datbaase 5.1 Select -> Add cartridge_, and then return back to the application overview, the _Application Overview page_ on the bottom left of the page.
+2. Now, let's install phpMyAdmin so we can see what is going on. Choose _Details -> Add+ -> phpMyAdmin 3.4 -> Select -> Add cartridge_, and then return back to the application overview, the _Application Overview page_ on the bottom left of the page. You'll be provided with the login credentials for phpMyAdmin here. Copy the password.
+3. Log into phpMyAdmin using details provided. Nothing to see yet, we need to deploy the app!
+4. OpenShift automatically configures a managed datasource for this database, so we don't need to do anything here. 
+5. Now, we need to tell the app to use the MySQL datasource. In JBDS open up `src/main/resources/persistence.xml` and set the DS to `java:jboss/datasources/MysqlDS` and change the `hibernate.hbm2ddl.auto` property to `update`, so that we don't clobber the data every time!
+6. Now deploy the changes
+
+    git add src; rhc-express deploy
+
+7. Visit the app, and add an entry
+8. In phpMyAdmin click to refresh, and then in the Member table to show the added entry
+
+
+Test on OpenShift
+-----------------
+
+Now let's add some testing to our app. We really do want to make our test as close to our production environment as possible, so we're going to test on OpenShift. Luckily Arquillian comes with OpenShift support. 
+
+1. First, Add Arquillian to your app. It doesn't really matter what container you select, at the moment Forge doesn't support the OpenShift container, we need to add it manually.
+
+    arquillian setup
+
+2. Add the `arquillian-openshift-express` profile to `pom.xml` (this is the manual adding of the container)
+
+[source,xml]
+-----------------------------------------------------------------
+<profile>
+    <id>arquillian-openshift-express</id>
+    <dependencies>
+        <dependency>
+            <groupId>org.jboss.arquillian.container</groupId>
+            <artifactId>arquillian-openshift-express</artifactId>
+            <version>1.0.0.Beta1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</profile>
+-----------------------------------------------------------------
+
+3. We also need to add an `arquillian.xml` with the configuration of the OpenShift account. 
+
+*************************************************************************************
+Note that you need to replace Pete's details with your own here. You also need to set
+the `sshUserName` to that of your `test` app. I suggest you do this before you start 
+the demo!
+*************************************************************************************
+
+[source,xml]
+------------------------------------------------------------------------------------
+<?xml version="1.0" encoding="UTF-8"?>
+<arquillian xmlns="http://jboss.org/schema/arquillian"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://jboss.org/schema/arquillian
+    http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
+
+    <container qualifier="openshift" default="true">
+        <configuration>
+            <property name="namespace">pmuir</property>
+            <property name="application">test</property>
+            <property name="sshUserName">0f02de982fcc4981b41d506754f610cc</property>
+            <property name="login">pmuir@bleepbleep.org.uk</property>
+        </configuration>
+    </container>
+
+</arquillian>
+------------------------------------------------------------------------------------
+
+4. Now, we better actually add a test! We'll be exercising the JAX-RS endpoint we created.
+
+./src/test/java/com/acme/test/MemberTest.java
+[source,java]
+------------------------------------------------------------------------
+@RunWith(Arquillian.class)
+public class MemberTest {
+
+    @Deployment
+    public static WebArchive deployment() {
+	return ShrinkWrap
+	        .create(WebArchive.class)
+	        .addClasses(Member.class, MemberEndpoint.class)
+	        .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+	        .addAsResource("META-INF/persistence.xml",
+	                "META-INF/persistence.xml");
+    }
+
+    @Inject
+    MemberEndpoint endpoint;
+
+    @Test
+    public void testMember() {
+	Member member = new Member();
+	member.setName("Bob");
+	member.setPhoneNumber("07769557110");
+	member.setEmail("bob@redhat.com");
+
+	endpoint.create(member);
+
+	List<Member> members = endpoint.listAll();
+	Assert.assertTrue(checkBobInList(members));
+    }
+
+    private boolean checkBobInList(List<Member> members) {
+	for (Member m : members) {
+	    if (m.getEmail().equals("bob@redhat.com"))
+		return true;
+	}
+	return false;
+    }
+
+}
+--------------------------------------------------------------------------
+
+5. Now, run the test in Forge. Notice how we use the `arquillian-openshift-express` profile.
+
+    mvn clean test -Parquillian-openshift-express
+
+
+Use Jenkins with OpenShift to manage builds
+-------------------------------------------
+
+Here we use an easily installed Jenkins to do builds. It takes up one slot of our 5 on OpenShift. This means your build runs in a jail, and doesn't steal resources from a running app. The app will stay up, and only get replaced if the build succeeds. It also gives you a record of builds. Good for >1 person working on an app.
+
+1. First, set up Jenkins. Note that if you don't have a jenkins app installed, it will add one. 
+
+    rhc-express embed-jenkins
+
+2. Show this in action - make a change to the `index.xhtml` and then deploy the change 
+    
+    git add pom.xml src; rhc-express deploy
+
+3. Show that the node is still up whilst app is building
+4. The real value comes when we run tests - log into Jenkins console (password provided first time you you run `rhc-express embed-jenkins`, and edit the acme build configuration to remove the `-DskipTests`
+5. Edit the `pom.xml` and merge the `openshift` and `arquillian-openshift-express` profiles so our tests get run
+6. Show this in action - click the build icon in Jenkins
+7. Now, make the test fail and show this in action - add an `Assert.fail()` to the end of `testMember()` and push the change
+
+    git add pom.xml src; rhc-express deploy
+8. The build will fail, so we better remove that!
+
+
+Add Scaling to the app
+----------------------
+
+TODO
+
