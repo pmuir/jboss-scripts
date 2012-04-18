@@ -57,7 +57,21 @@ Take a look at how events are rendered
 
 1. Open up `src/main/webapp/desktop-index.html` 
 2. At top of JS show backbone for model and events
-3. TODO
+   * Explain models, views and routers
+3. Explain underscore templating used by the views (great for separating markup from actual code)
+4. Show Event model and Events collection (including REST url mapping)
+5. Show EventCategoriesView and associated subviews
+   * show how templating is used
+6. Show the router (and how `#events` results in rendering EventCategoriesView)
+   * Explain how view get rendered and bound to `div` elements
+   * Explain fetch() and the chain of events that leads to rendering the view (i.e. "reset")
+
+Bookings
+7. Show EventDetailView
+8. Show CreateBookingView - explain how its model gets continuously updated and portions of it re-rendered
+   * may need a recall on the concept of subviews and backbone events 
+   * the concept of subviews may be understood by now, let's not dwell into JS details, however:
+   * show `save()` invoked when the button is clicked, show the REST call and its outcome 
 
 Generate admin layer
 --------------------
