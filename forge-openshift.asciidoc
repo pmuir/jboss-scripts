@@ -54,7 +54,7 @@ This section of the script creates a new app from scratch from Forge, imports it
     entity --named Member --package com.acme.model
 
 10. Add these fields with constrains via Eclipse
-
++
 [source,java]
 ---------------------------------------------------------------------------               
     @Column
@@ -71,8 +71,7 @@ This section of the script creates a new app from scratch from Forge, imports it
 --------------------------------------------------------------------------
 
 11. Now, generate getters and setters for all fields using Eclipse
-
-12. Now' let's scaffold a JSF CRUD view for the entity. First, add scaffolding to the project in Forge.
+12. Now let's scaffold a JSF CRUD view for the entity. First, add scaffolding to the project in Forge.
 
     scaffold setup
 
@@ -92,7 +91,7 @@ This section of the script creates a new app from scratch from Forge, imports it
 
     $JBOSS_HOME/bin/standalone.sh (unix)
     $JBOSS_HOME/bin/standalone.bat
-    
+
 17. Build and deploy it 
 
     mvn clean package jboss-as:deploy
@@ -111,7 +110,7 @@ This section takes the app you created and pushes it to the cloud. Now the app i
 
     git add src pom.xml; rhc-express deploy
 
-4. Paste url provided by `rhc-express setup` into web browser
+3. Paste url provided by `rhc-express setup` into web browser
 
 
 Add MySQL to app
@@ -142,7 +141,7 @@ Now let's add some testing to our app. We really do want to make our test as clo
     arquillian setup
 
 2. Add the `arquillian-openshift-express` profile to `pom.xml` (this is the manual adding of the container)
-
++
 [source,xml]
 -----------------------------------------------------------------
 <profile>
@@ -159,13 +158,13 @@ Now let's add some testing to our app. We really do want to make our test as clo
 -----------------------------------------------------------------
 
 3. We also need to add an `arquillian.xml` with the configuration of the OpenShift account. 
-
++
 *************************************************************************************
 Note that you need to replace Pete's details with your own here. You also need to set
 the `sshUserName` to that of your `test` app. I suggest you do this before you start 
 the demo!
 *************************************************************************************
-
++
 [source,xml]
 ------------------------------------------------------------------------------------
 <?xml version="1.0" encoding="UTF-8"?>
@@ -187,7 +186,7 @@ the demo!
 ------------------------------------------------------------------------------------
 
 4. Now, we better actually add a test! We'll be exercising the JAX-RS endpoint we created.
-
++
 ./src/test/java/com/acme/test/MemberTest.java
 [source,java]
 ------------------------------------------------------------------------
